@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>りくちゃんと ふしぎな ともだちの ぼうけん</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background: linear-gradient(135deg, #FFE4E1, #F0F8FF);
+            overflow: hidden;
+        }
+        
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+        
+        .slide {
+            display: none;
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            padding: 40px;
+            text-align: center;
+            background: linear-gradient(135deg, #FFE4E1, #F0F8FF);
+            animation: slideIn 0.8s ease-in-out;
+        }
+        
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .slide h1 {
+            font-size: 2.5em;
+            color: #FF6B6B;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-weight: 800;
+        }
+        
+        .slide h2 {
+            font-size: 2em;
+            color: #4ECDC4;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+        
+        .slide p {
+            font-size: 1.3em;
+            line-height: 1.8;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            font-weight: 400;
+        }
+        
+        .characters {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .character {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            min-width: 180px;
+        }
+        
+        .character-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .riku { background: linear-gradient(45deg, #FF6B6B, #FF8E8E); }
+        .ryushin { background: linear-gradient(45deg, #4ECDC4, #6FE6D8); }
+        .hako { background: linear-gradient(45deg, #FFE66D, #FFF176); }
+        
+        .scene {
+            background: rgba(255,255,255,0.9);
+            border-radius: 25px;
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 700px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 3px solid #FFE66D;
+        }
+        
+        .speech-bubble {
+            background: #FFF;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 2px solid #4ECDC4;
+        }
+        
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 15px solid #4ECDC4;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+        
+        .nav-btn {
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1.1em;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #333;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .title-slide {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4, #FFE66D);
+        }
+        
+        .title-slide h1 {
+            font-size: 3.5em;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 40px;
+        }
+        
+        .magic-mirror {
+            width: 200px;
+            height: 250px;
+            background: linear-gradient(45deg, #C0C0C0, #E8E8E8);
+            border-radius: 20px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 5px solid #FFD700;
+        }
+        
+        .rainbow {
+            width: 300px;
+            height: 150px;
+            background: linear-gradient(90deg, #FF6B6B, #FFE66D, #4ECDC4, #6B73FF, #FF6B6B);
+            border-radius: 150px 150px 0 0;
+            margin: 30px auto;
+            opacity: 0.8;
+        }
+        
+        .happy-ending {
+            background: linear-gradient(135deg, #FFE4E1, #F0F8FF, #E8F5E8);
+        }
+    </style>
+</head>
+<body>
+    <div class="slideshow-container">
+        <!-- スライド1: タイトル -->
+        <div class="slide active title-slide">
+            <h1>りくちゃんと<br>ふしぎな ともだちの<br>ぼうけん</h1>
+            <div style="font-size: 1.5em; color: white; font-weight: 600;">
+                📚 絵本のような お話 📚
+            </div>
+        </div>
+        
+        <!-- スライド2: キャラクター紹介 -->
+        <div class="slide">
+            <h2>なかよし 3人組</h2>
+            <div class="characters">
+                <div class="character">
+                    <div class="character-icon riku">りく</div>
+                    <h3>りくちゃん</h3>
+                    <p>小学1年生の<br>元気な女の子</p>
+                </div>
+                <div class="character">
+                    <div class="character-icon ryushin">りゅう</div>
+                    <h3>りゅうしんくん</h3>
+                    <p>おとなしいけど<br>やさしい男の子</p>
+                </div>
+                <div class="character">
+                    <div class="character-icon hako">□</div>
+                    <h3>はこちゃん</h3>
+                    <p>しゃべる<br>ふしぎな白い箱</p>
+                </div>
+            </div>
+            <p>3人は いつも いっしょに 遊んでいる 大の仲良し！</p>
+        </div>
+        
+        <!-- スライド3: 大事件発生 -->
+        <div class="slide">
+            <h2>😱 学校で 大事件！</h2>
+            <div class="scene">
+                <p>校長先生が 突然 言いました</p>
+                <div class="speech-bubble">
+                    <strong>「にこにこタイムを やめる！<br>理由は とくにない。<br>時間の ムダだ！」</strong>
+                </div>
+                <p>にこにこタイム = みんなが 自由に 遊べる<br>たった 15分の 大切な 時間</p>
+            </div>
+        </div>
+        
+        <!-- スライド4: りくちゃんの決意 -->
+        <div class="slide">
+            <h2>💪 りくちゃんの 決意</h2>
+            <div class="scene">
+                <div class="speech-bubble">
+                    <strong>「そんなん、おかしい！<br><br>みんなで たんけんして、<br>校長先生の 本当の 気もちを<br>さぐってみよう！」</strong>
+                </div>
+                <p>りくちゃんは カチンと きました</p>
+            </div>
+        </div>
+        
+        <!-- スライド5: 夜の探検 -->
+        <div class="slide">
+            <h2>🌙 夜の 学校 たんけん</h2>
+            <div class="scene">
+                <p>その夜、3人は 学校に しのびこみました</p>
+                <p>💡 はこちゃんが 光って、<br>こっそりと 廊下を てらします</p>
+                <p>理科室の 奥で 見つけたのは...</p>
+                <div class="magic-mirror">
+                    <div style="color: #333; font-size: 1.2em;">🪞<br>こころを<br>うつす鏡</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- スライド6: 鏡の中の真実 -->
+        <div class="slide">
+            <h2>✨ 鏡の 中の 真実</h2>
+            <div class="scene">
+                <p>校長先生の 写真を 鏡に うつすと...</p>
+                <div class="speech-bubble">
+                    <strong>「ぼくも、むかしは<br>にこにこタイムが 大好きだったんだ。<br><br>でも、みんなが 先生になると、<br>子どもの 自由を<br>こわがるように なるんだ...」</strong>
+                </div>
+                <p>さびしそうに 笑う 若い頃の 校長先生</p>
+            </div>
+        </div>
+        
+        <!-- スライド7: りゅうしんくんの気づき -->
+        <div class="slide">
+            <h2>💭 りゅうしんくんの 気づき</h2>
+            <div class="scene">
+                <div class="speech-bubble">
+                    <strong>「校長先生、<br>きっと こわいんじゃなくて、<br>忘れちゃってるんだよ、<br>あのころのこと。」</strong>
+                </div>
+                <p>やさしい りゅうしんくんが<br>ぽつりと 言いました</p>
+            </div>
+        </div>
+        
+        <!-- スライド8: にこにこタイム大作戦 -->
+        <div class="slide">
+            <h2>🎉 にこにこタイム 大作戦！</h2>
+            <div class="scene">
+                <p>次の日の朝、全校生徒で スタート！</p>
+                <p>📝 手紙　🎨 絵　💃 ダンス　🎵 歌</p>
+                <p>みんなが できる「にこにこ」を<br>ぜんぶ 校長先生に 見せました</p>
+                <div style="font-size: 2em; margin: 20px 0;">
+                    😊😊😊😊😊
+                </div>
+            </div>
+        </div>
+        
+        <!-- スライド9: 校長先生の涙 -->
+        <div class="slide">
+            <h2>😭 校長先生の 涙</h2>
+            <div class="scene">
+                <p>最初は 顔を しかめていた 校長先生</p>
+                <p>でも、りゅうしんくんが 言いました</p>
+                <div class="speech-bubble">
+                    <strong>「これ、先生が 1年生のとき<br>描いた 絵と 同じだよ」</strong>
+                </div>
+                <p>先生の 目に、涙が ぽろり 💧</p>
+                <div class="speech-bubble">
+                    <strong>「...ああ、そうだった。<br>ぼくも、あの時間が 大好きだった。」</strong>
+                </div>
+            </div>
+        </div>
+        
+        <!-- スライド10: ハッピーエンド -->
+        <div class="slide happy-ending">
+            <h2>🌈 みんな ハッピー！</h2>
+            <div class="scene">
+                <p>その日から、にこにこタイムは<br><strong>2倍の 30分</strong> に！</p>
+                <p>校長先生も、いっしょに<br>校庭で 遊ぶように なりました</p>
+                <div class="speech-bubble">
+                    <strong>「りくちゃん、りゅうしんくん、はこちゃん。<br>きみたちは、学校の<br>ほんとうの ヒーローだね。」</strong>
+                </div>
+                <p>3人は、手を つなぎ、にっこり 笑いました</p>
+                <div class="rainbow"></div>
+                <p style="font-size: 1.5em; font-weight: bold; color: #FF6B6B;">
+                    🌈 おしまい 🌈
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">10</span>
+    </div>
+    
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn" onclick="changeSlide(-1)">⬅️ まえ</button>
+        <button class="nav-btn" id="next-btn" onclick="changeSlide(1)">つぎ ➡️</button>
+    </div>
+    
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('total-slides').textContent = totalSlides;
+        
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            document.getElementById('prev-btn').disabled = currentSlide === 0;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides - 1;
+        }
+        
+        function changeSlide(direction) {
+            if (direction === 1 && currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            } else if (direction === -1 && currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+        
+        // 初期設定
+        showSlide(0);
+        
+        // キーボード操作
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+        });
+        
+        // 自動でスライドを進める機能（オプション）
+        let autoSlide = false;
+        
+        function toggleAutoSlide() {
+            autoSlide = !autoSlide;
+            if (autoSlide) {
+                autoSlideInterval = setInterval(() => {
+                    if (currentSlide < totalSlides - 1) {
+                        changeSlide(1);
+                    } else {
+                        autoSlide = false;
+                        clearInterval(autoSlideInterval);
+                    }
+                }, 4000);
+            } else {
+                clearInterval(autoSlideInterval);
+            }
+        }
+        
+        // スペースキーまたは右矢印で次のスライド
+        // 左矢印で前のスライド
+    </script>
+</body>
+</html>
